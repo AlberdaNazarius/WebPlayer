@@ -1,6 +1,7 @@
 package com.webapp.player.controller;
 
 import com.webapp.player.dto.PlaylistDto;
+import com.webapp.player.dto.PlaylistUploadDto;
 import com.webapp.player.service.PlaylistService;
 import com.webapp.player.service.mapper.PlaylistMapper;
 import jakarta.annotation.Nonnull;
@@ -21,9 +22,9 @@ public class PlaylistController {
   }
 
   @PostMapping
-  public PlaylistDto addPlaylist(@RequestBody @Nonnull final PlaylistDto playlistDto) {
-    final var playlistToAdd = playlistMapper.toPlaylist(playlistDto);
-    final var playlist = playlistService.addPlaylist(playlistToAdd);
+  public PlaylistDto addPlaylist(@RequestBody @Nonnull final PlaylistUploadDto dto) {
+    final var playlistToAdd = playlistMapper.toPlaylist(dto);
+    final var playlist = playlistService.addPlaylist(playlistToAdd, dto.getImageName());
     return playlistMapper.toPlaylistDto(playlist);
   }
 }

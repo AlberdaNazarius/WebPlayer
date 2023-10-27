@@ -1,6 +1,5 @@
 package com.webapp.player.dto;
 
-import com.webapp.player.persistence.entity.Image;
 import com.webapp.player.persistence.entity.Song;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,8 +11,8 @@ import java.util.Set;
 @Value
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PlaylistDto {
+public class PlaylistUploadDto {
   String name;
-  Image image;
+  String imageName;
   Set<Song> songs;
 }

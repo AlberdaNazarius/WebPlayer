@@ -1,5 +1,6 @@
 package com.webapp.player.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -14,19 +15,22 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Playlist {
+public class Image {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id", nullable = false)
   Long id;
 
   @Column(name = "name")
   String name;
 
-  @ManyToOne
-  @JoinColumn(name = "image_id")
-  Image image;
+  @Column(name = "type")
+  String type;
 
-  @ManyToMany(mappedBy = "playlists")
-  Set<Song> songs;
+  @Lob
+  @Column(name = "image_data")
+  byte[] imageData;
+
+  @OneToMany(mappedBy = "image")
+  @JsonIgnore
+  Set<Playlist> playlists;
 }
