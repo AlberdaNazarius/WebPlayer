@@ -17,10 +17,12 @@ import java.io.IOException;
 public class StorageServiceImp implements StorageService {
   private final ImageRepository imageRepository;
 
-  public byte[] downloadImage(String fileName) {
+  public Image downloadImage(String fileName) {
     final var retrievedImage = imageRepository.findByName(fileName);
+    final var decompressImageData = ImageUtils.decompressImage(retrievedImage.get().getImageData());
+    retrievedImage.get().setImageData(decompressImageData);
     log.info("File {} was successfully downloaded", fileName);
-    return ImageUtils.decompressImage(retrievedImage.get().getImageData());
+    return retrievedImage.get();
   }
 
   public void uploadImage(final MultipartFile file) {

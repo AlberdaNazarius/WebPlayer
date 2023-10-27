@@ -1,6 +1,7 @@
 package com.webapp.player.service.imp;
 
 import com.webapp.player.common.error.PlaylistNotFoundException;
+import com.webapp.player.common.util.ImageUtils;
 import com.webapp.player.dto.PlaylistDto;
 import com.webapp.player.persistence.entity.Playlist;
 import com.webapp.player.persistence.repository.ImageRepository;
@@ -20,7 +21,9 @@ public class PlaylistServiceImpl implements PlaylistService {
 
   @Override
   public Playlist getPlaylistById(@Nonnull final Long id) {
-    return playlistRepository.getReferenceById(id);
+    Playlist playlist = playlistRepository.getReferenceById(id);
+    playlist.getImage().setImageData(ImageUtils.decompressImage(playlist.getImage().getImageData()));
+    return playlist;
   }
 
   @Override
