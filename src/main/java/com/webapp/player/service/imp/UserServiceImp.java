@@ -9,6 +9,7 @@ import com.webapp.player.service.mapper.UserMapper;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,16 +18,19 @@ public class UserServiceImp implements UserService {
   private final UserMapper userMapper;
 
   @Override
+  @Transactional(readOnly = true)
   public User getUserById(@Nonnull final Long id) {
     return userRepository.getReferenceById(id);
   }
 
   @Override
+  @Transactional
   public User addUser(@Nonnull final User user) {
     return userRepository.save(user);
   }
 
   @Override
+  @Transactional
   public User modifyUser(@Nonnull final Long userId, @Nonnull final UserDto userDto) {
     final var user = userRepository.findById(userId);
     if (user.isEmpty()) {
@@ -37,6 +41,7 @@ public class UserServiceImp implements UserService {
   }
 
   @Override
+  @Transactional
   public User deleteUser(@Nonnull final Long id) {
     final var userToDelete = userRepository.findById(id);
     if (userToDelete.isEmpty()) {

@@ -12,7 +12,8 @@ import java.util.Set;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PlaylistDto {
+  Long id;
   String name;
-  ImageDto image;
+  String imageKey;
   Set<Song> songs;
 }

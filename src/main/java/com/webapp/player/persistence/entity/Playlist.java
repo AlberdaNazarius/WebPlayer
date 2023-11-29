@@ -23,9 +23,8 @@ public class Playlist {
   @Column(name = "name")
   String name;
 
-  @ManyToOne
-  @JoinColumn(name = "image_id")
-  Image image;
+  @Column(name = "image_key")
+  String imageKey;
 
   @ManyToMany(mappedBy = "playlists")
   Set<Song> songs;

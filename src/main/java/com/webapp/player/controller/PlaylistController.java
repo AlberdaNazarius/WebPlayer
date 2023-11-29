@@ -8,6 +8,8 @@ import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/playlist")
 @RequiredArgsConstructor
@@ -19,6 +21,11 @@ public class PlaylistController {
   public PlaylistDto getPlaylist(@PathVariable @Nonnull final Long id) {
     final var playlist = playlistService.getPlaylistById(id);
     return playlistMapper.toPlaylistDto(playlist);
+  }
+
+  @GetMapping("/playlists")
+  public List<PlaylistDto> getAllPlaylists() {
+    return playlistService.getPlaylists().stream().map(playlistMapper::toPlaylistDto).toList();
   }
 
   @PostMapping

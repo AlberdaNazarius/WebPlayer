@@ -8,6 +8,7 @@ import com.webapp.player.service.SongService;
 import com.webapp.player.service.mapper.SongMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,16 +18,19 @@ public class SongServiceImpl implements SongService {
 
 
   @Override
+  @Transactional(readOnly = true)
   public Song getSongById(Long id) {
     return songRepository.getReferenceById(id);
   }
 
   @Override
+  @Transactional
   public Song addSong(Song song) {
     return songRepository.save(song);
   }
 
   @Override
+  @Transactional
   public Song modifySong(Long songId, SongDto songDto) {
     final var song = songRepository.findById(songId);
     if (song.isEmpty()) {
@@ -37,6 +41,7 @@ public class SongServiceImpl implements SongService {
   }
 
   @Override
+  @Transactional
   public Song deleteSong(Long id) {
     final var songToDelete = songRepository.findById(id);
     if (songToDelete.isEmpty()) {

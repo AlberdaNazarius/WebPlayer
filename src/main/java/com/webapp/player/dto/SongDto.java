@@ -15,5 +15,5 @@ public class SongDto {
   String author;
   Date addedDate;
   String duration;
-  String image;
+  String imageKey;
 }
