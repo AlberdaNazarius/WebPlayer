@@ -28,19 +28,22 @@ public class Song {
   @Column(name = "author")
   String author;
 
+  @Column(name = "album")
+  String album;
+
   @Column(name = "added_date")
   Date addedDate;
 
   @Column(name = "duration")
   String duration;
 
-  @Column(name = "image")
+  @Column(name = "image_key")
   String imageKey;
 
-  @ManyToMany()
-  @JoinTable(name = "playlist_song",
-          joinColumns = @JoinColumn(name = "playlist_id"),
-          inverseJoinColumns = @JoinColumn(name = "song_id"))
+  @Column(name = "song_key")
+  String songKey;
+
   @JsonIgnore
+  @ManyToMany(mappedBy = "songs")
   Set<Playlist> playlists;
 }

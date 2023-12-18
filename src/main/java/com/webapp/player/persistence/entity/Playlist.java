@@ -1,5 +1,6 @@
 package com.webapp.player.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -26,6 +27,13 @@ public class Playlist {
   @Column(name = "image_key")
   String imageKey;
 
-  @ManyToMany(mappedBy = "playlists")
+  @ManyToMany()
+  @JoinTable(name = "playlist_song",
+          joinColumns = @JoinColumn(name = "playlist_id"),
+          inverseJoinColumns = @JoinColumn(name = "song_id"))
   Set<Song> songs;
+
+  @ManyToMany(mappedBy = "playlists")
+  @JsonIgnore
+  Set<User> users;
 }

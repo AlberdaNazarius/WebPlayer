@@ -1,10 +1,11 @@
 package com.webapp.player.controller;
 
+import com.webapp.player.dto.SongDto;
 import com.webapp.player.service.SongService;
 import com.webapp.player.service.mapper.SongMapper;
+import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/song")
@@ -12,4 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class SongController {
   private final SongService songService;
   private final SongMapper songMapper;
+
+  @PostMapping
+  public SongDto addSong(@RequestBody @Nonnull final SongDto dto) {
+    final var songToAdd = songMapper.toSong(dto);
+    final var song = songService.addSong(songToAdd);
+    return songMapper.toSongDto(song);
+  }
+
+  @DeleteMapping("/{id}")
+  public SongDto deleteSong(@PathVariable final Long id) {
+    final var response = songService.deleteSong(id);
+    return songMapper.toSongDto(response);
+  }
 }

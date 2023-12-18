@@ -12,6 +12,6 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring")
 public interface PlaylistMapper {
   PlaylistDto toPlaylistDto(Playlist playlist);
-  Playlist toPlaylist(PlaylistUploadDto playlistDto);
+  Playlist toPlaylist(PlaylistDto playlistDto);
   void updatePlaylist(@MappingTarget Playlist playlist, PlaylistDto playlistDto);
 }

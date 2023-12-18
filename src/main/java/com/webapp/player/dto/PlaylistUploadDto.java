@@ -13,6 +13,6 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PlaylistUploadDto {
   String name;
-  String imageName;
+  String imageKey;
   Set<Song> songs;
 }
