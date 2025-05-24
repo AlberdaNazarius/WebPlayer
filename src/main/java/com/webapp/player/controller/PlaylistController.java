@@ -1,8 +1,6 @@
 package com.webapp.player.controller;
 
-import com.amazonaws.Response;
 import com.webapp.player.dto.PlaylistDto;
-import com.webapp.player.dto.PlaylistUploadDto;
 import com.webapp.player.service.PlaylistService;
 import com.webapp.player.service.mapper.PlaylistMapper;
 import jakarta.annotation.Nonnull;

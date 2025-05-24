@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class SongServiceImpl implements SongService {
@@ -21,6 +23,12 @@ public class SongServiceImpl implements SongService {
   @Transactional(readOnly = true)
   public Song getSongById(Long id) {
     return songRepository.getReferenceById(id);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<Song> getSongs() {
+    return songRepository.findAll();
   }
 
   @Override

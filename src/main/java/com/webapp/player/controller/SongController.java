@@ -7,12 +7,19 @@ import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/song")
 @RequiredArgsConstructor
 public class SongController {
   private final SongService songService;
   private final SongMapper songMapper;
+
+  @GetMapping("/songs")
+  public List<SongDto> getAllSongs() {
+    return songService.getSongs().stream().map(songMapper::toSongDto).toList();
+  }
 
   @PostMapping
   public SongDto addSong(@RequestBody @Nonnull final SongDto dto) {
