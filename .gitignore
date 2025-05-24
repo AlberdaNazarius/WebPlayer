@@ -19,3 +19,4 @@ bin/
 ### IntelliJ IDEA ###
 .idea/
 
+/audio-storage
