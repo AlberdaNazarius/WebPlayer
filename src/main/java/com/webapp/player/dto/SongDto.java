@@ -16,4 +16,6 @@ public class SongDto {
   Date addedDate;
   String duration;
   String imageKey;
+  String songKey;
+  String album;
 }
