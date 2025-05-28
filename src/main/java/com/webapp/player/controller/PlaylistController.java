@@ -60,7 +60,6 @@ public class PlaylistController {
     playlistToAdd.addUser(currentUser);
 
     final Playlist playlist = playlistService.addPlaylist(playlistToAdd);
-    log.info("POST: Playlist was added");
     return playlistMapper.toPlaylistDto(playlist);
   }
 
@@ -80,9 +79,12 @@ public class PlaylistController {
   }
 
   @DeleteMapping("/{id}")
-  public PlaylistDto deletePlaylist(@PathVariable("id") final Long playlistId) {
-    final var response = playlistService.deletePlaylist(playlistId);
+  public ResponseEntity<?> deletePlaylist(@PathVariable("id") final Long playlistId) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String username = authentication.getName();
+
+    playlistService.deletePlaylist(playlistId, username);
     log.info("DELETE: Playlist with id {} was deleted", playlistId);
-    return playlistMapper.toPlaylistDto(response);
+    return ResponseEntity.ok().build();
   }
 }

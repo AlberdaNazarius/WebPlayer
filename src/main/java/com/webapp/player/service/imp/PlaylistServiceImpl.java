@@ -4,6 +4,8 @@ import com.webapp.player.common.error.PlaylistNotFoundException;
 import com.webapp.player.common.error.SongNotFoundException;
 import com.webapp.player.dto.PlaylistDto;
 import com.webapp.player.persistence.entity.Playlist;
+import com.webapp.player.persistence.entity.Song;
+import com.webapp.player.persistence.entity.User;
 import com.webapp.player.persistence.repository.PlaylistRepository;
 import com.webapp.player.service.PlaylistService;
 import com.webapp.player.service.mapper.PlaylistMapper;
@@ -47,6 +49,7 @@ public class PlaylistServiceImpl implements PlaylistService {
       playlist.setSongs(new HashSet<>());
     }
 
+    log.info("POST: Playlist was added");
     return playlistRepository.save(playlist);
   }
 
@@ -85,13 +88,28 @@ public class PlaylistServiceImpl implements PlaylistService {
 
   @Override
   @Transactional
-  public Playlist deletePlaylist(@Nonnull final Long id) {
-    final var playlistToDelete = playlistRepository.findById(id);
-    if (playlistToDelete.isEmpty()) {
-      throw new PlaylistNotFoundException("Playlist with such id was not found");
+  public void deletePlaylist(@Nonnull final Long playlistId, final String username) {
+    Playlist playlist = playlistRepository.findByIdWithUsers(playlistId)
+            .orElseThrow(() -> new PlaylistNotFoundException("Playlist not found"));
+
+    boolean isUserAssociated = playlist.getUsers().stream()
+            .anyMatch(user -> user.getUsername().equals(username));
+
+    if (!isUserAssociated) {
+      log.info("Received error when deleting playlist");
+      return;
     }
-    playlistRepository.delete(playlistToDelete.get());
-    log.info("Playlist with id {} was deleted", id);
-    return playlistToDelete.get();
+
+    for (User user : new HashSet<>(playlist.getUsers())) {
+      user.getPlaylists().remove(playlist);
+      playlist.getUsers().remove(user);
+    }
+
+    for (Song song : new HashSet<>(playlist.getSongs())) {
+      song.getPlaylists().remove(playlist);
+      playlist.getSongs().remove(song);
+    }
+
+    playlistRepository.delete(playlist);
   }
 }

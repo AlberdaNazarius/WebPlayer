@@ -10,7 +10,7 @@ public interface PlaylistService {
   List<Playlist> getPlaylists();
   Playlist addPlaylist(final Playlist playlist);
   Playlist modifyPlaylist(final Long playlistId, final PlaylistDto playlistDto);
-  Playlist deletePlaylist(final Long id);
+  void deletePlaylist(final Long playlistId, final String username);
   List<Playlist> getPlaylistsByUsername(String username);
   void removeSong(final Long playlistId, final Long songId);
 }

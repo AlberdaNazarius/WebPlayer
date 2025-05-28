@@ -46,4 +46,9 @@ public class Song {
   @JsonIgnore
   @ManyToMany(mappedBy = "songs")
   Set<Playlist> playlists;
+
+  public void removeFromPlaylist(Playlist playlist) {
+    this.playlists.remove(playlist);
+    playlist.getSongs().remove(this);
+  }
 }

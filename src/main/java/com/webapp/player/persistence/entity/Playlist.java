@@ -52,7 +52,20 @@ public class Playlist {
   }
 
   public void removeUser(User user) {
-    this.users.remove(user);
-    user.getPlaylists().remove(this);
+    if (this.users != null) {
+      this.users.remove(user);
+    }
+    if (user.getPlaylists() != null) {
+      user.getPlaylists().remove(this);
+    }
+  }
+
+  public void removeSong(Song song) {
+    if (this.songs != null) {
+      this.songs.remove(song);
+    }
+    if (song.getPlaylists() != null) {
+      song.getPlaylists().remove(this);
+    }
   }
 }

@@ -53,8 +53,12 @@ public class User implements UserDetails {
   }
 
   public void removePlaylist(Playlist playlist) {
-    this.playlists.remove(playlist);
-    playlist.getUsers().remove(this);
+    if (this.playlists != null) {
+      this.playlists.remove(playlist);
+    }
+    if (playlist.getUsers() != null) {
+      playlist.getUsers().remove(this);
+    }
   }
 
   @Override
