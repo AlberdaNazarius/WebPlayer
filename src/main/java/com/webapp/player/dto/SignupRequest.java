@@ -1,18 +1,20 @@
 package com.webapp.player.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
-
 @Value
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserDto {
-  Long id;
+public class SignupRequest {
+  @NotBlank
   String username;
-  String imageKey;
-  Set<PlaylistDto> playlists;
+
+  @NotBlank
+  @Size(min = 6, max = 40)
+  String password;
 }

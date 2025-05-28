@@ -3,7 +3,12 @@ package com.webapp.player.persistence.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
 @Entity
@@ -14,14 +19,17 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User {
+public class User implements UserDetails {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id", nullable = false)
   Long id;
 
-  @Column(name = "nickname", nullable = false)
-  String nickname;
+  @Column(name = "username", nullable = false)
+  String username;
+
+  @Column(name = "password")
+  String password;
 
   @Column(name = "email")
   String email;
@@ -29,9 +37,37 @@ public class User {
   @Column(name = "image_key")
   String imageKey;
 
+  @ManyToMany(fetch = FetchType.EAGER)
+  Collection<Role> roles = new ArrayList<>();
+
   @ManyToMany()
   @JoinTable(name = "user_playlist",
           joinColumns = @JoinColumn(name = "user_id"),
           inverseJoinColumns = @JoinColumn(name = "playlist_id"))
   Set<Playlist> playlists;
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return Collections.emptyList();
+  }
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return false;
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return false;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return false;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return false;
+  }
 }
