@@ -6,10 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -45,6 +42,14 @@ public class User implements UserDetails {
           joinColumns = @JoinColumn(name = "user_id"),
           inverseJoinColumns = @JoinColumn(name = "playlist_id"))
   Set<Playlist> playlists;
+
+  public void addPlaylist(Playlist playlist) {
+    if (this.playlists == null) {
+      this.playlists = new HashSet<>();
+    }
+    this.playlists.add(playlist);
+    playlist.getUsers().add(this);
+  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

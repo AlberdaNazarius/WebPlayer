@@ -58,6 +58,12 @@ public class PlaylistServiceImpl implements PlaylistService {
   }
 
   @Override
+  @Transactional(readOnly = true)
+  public List<Playlist> getPlaylistsByUsername(String username) {
+    return playlistRepository.findByUsersUsername(username);
+  }
+
+  @Override
   @Transactional
   public void removeSong(@Nonnull final Long playlistId,
                          @Nonnull final Long songId) {

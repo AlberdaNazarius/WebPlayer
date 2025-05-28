@@ -1,13 +1,19 @@
 package com.webapp.player.controller;
 
 import com.webapp.player.dto.PlaylistDto;
+import com.webapp.player.persistence.entity.Playlist;
+import com.webapp.player.persistence.entity.User;
+import com.webapp.player.persistence.repository.UserRepository;
 import com.webapp.player.service.PlaylistService;
 import com.webapp.player.service.mapper.PlaylistMapper;
 import jakarta.annotation.Nonnull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +24,7 @@ import java.util.List;
 @Slf4j
 public class PlaylistController {
   private final PlaylistService playlistService;
+  private final UserRepository userRepository;
   private final PlaylistMapper playlistMapper;
 
   @GetMapping("/{id}")
@@ -32,10 +39,26 @@ public class PlaylistController {
     return playlistService.getPlaylists().stream().map(playlistMapper::toPlaylistDto).toList();
   }
 
+  @GetMapping("/playlists/user")
+  public List<PlaylistDto> getUserPlaylists() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String username = authentication.getName();
+
+    List<Playlist> userPlaylists = playlistService.getPlaylistsByUsername(username);
+    return userPlaylists.stream().map(playlistMapper::toPlaylistDto).toList();
+  }
+
   @PostMapping
   public PlaylistDto addPlaylist(@RequestBody @Nonnull final PlaylistDto dto) {
-    final var playlistToAdd = playlistMapper.toPlaylist(dto);
-    final var playlist = playlistService.addPlaylist(playlistToAdd);
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String username = authentication.getName();
+
+    final Playlist playlistToAdd = playlistMapper.toPlaylist(dto);
+    User currentUser = userRepository.findByUsername(username)
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    playlistToAdd.getUsers().add(currentUser);
+
+    final Playlist playlist = playlistService.addPlaylist(playlistToAdd);
     log.info("POST: Playlist was added");
     return playlistMapper.toPlaylistDto(playlist);
   }
