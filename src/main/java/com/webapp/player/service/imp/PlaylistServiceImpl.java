@@ -4,7 +4,6 @@ import com.webapp.player.common.error.PlaylistNotFoundException;
 import com.webapp.player.common.error.SongNotFoundException;
 import com.webapp.player.dto.PlaylistDto;
 import com.webapp.player.persistence.entity.Playlist;
-import com.webapp.player.persistence.entity.Song;
 import com.webapp.player.persistence.repository.PlaylistRepository;
 import com.webapp.player.service.PlaylistService;
 import com.webapp.player.service.mapper.PlaylistMapper;
@@ -14,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -43,6 +43,10 @@ public class PlaylistServiceImpl implements PlaylistService {
   @Override
   @Transactional
   public Playlist addPlaylist(@Nonnull final Playlist playlist) {
+    if (playlist.getSongs() == null) {
+      playlist.setSongs(new HashSet<>());
+    }
+
     return playlistRepository.save(playlist);
   }
 

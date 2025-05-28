@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -31,9 +32,27 @@ public class Playlist {
   @JoinTable(name = "playlist_song",
           joinColumns = @JoinColumn(name = "playlist_id"),
           inverseJoinColumns = @JoinColumn(name = "song_id"))
-  Set<Song> songs;
+  Set<Song> songs = new HashSet<>();
 
+  @Builder.Default
   @ManyToMany(mappedBy = "playlists")
   @JsonIgnore
-  Set<User> users;
+  Set<User> users = new HashSet<>();
+
+  public void addUser(User user) {
+    if (this.users == null) {
+      this.users = new HashSet<>();
+    }
+    this.users.add(user);
+
+    if (user.getPlaylists() == null) {
+      user.setPlaylists(new HashSet<>());
+    }
+    user.getPlaylists().add(this);
+  }
+
+  public void removeUser(User user) {
+    this.users.remove(user);
+    user.getPlaylists().remove(this);
+  }
 }

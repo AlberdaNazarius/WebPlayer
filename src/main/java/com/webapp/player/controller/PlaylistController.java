@@ -56,7 +56,8 @@ public class PlaylistController {
     final Playlist playlistToAdd = playlistMapper.toPlaylist(dto);
     User currentUser = userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    playlistToAdd.getUsers().add(currentUser);
+
+    playlistToAdd.addUser(currentUser);
 
     final Playlist playlist = playlistService.addPlaylist(playlistToAdd);
     log.info("POST: Playlist was added");

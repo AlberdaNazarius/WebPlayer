@@ -37,11 +37,12 @@ public class User implements UserDetails {
   @ManyToMany(fetch = FetchType.EAGER)
   Collection<Role> roles = new ArrayList<>();
 
+  @Builder.Default
   @ManyToMany()
   @JoinTable(name = "user_playlist",
           joinColumns = @JoinColumn(name = "user_id"),
           inverseJoinColumns = @JoinColumn(name = "playlist_id"))
-  Set<Playlist> playlists;
+  Set<Playlist> playlists = new HashSet<>();
 
   public void addPlaylist(Playlist playlist) {
     if (this.playlists == null) {
@@ -49,6 +50,11 @@ public class User implements UserDetails {
     }
     this.playlists.add(playlist);
     playlist.getUsers().add(this);
+  }
+
+  public void removePlaylist(Playlist playlist) {
+    this.playlists.remove(playlist);
+    playlist.getUsers().remove(this);
   }
 
   @Override

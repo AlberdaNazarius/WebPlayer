@@ -36,6 +36,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/playlist/playlists").permitAll()
                     .requestMatchers("/api/song/songs").permitAll()
                     .requestMatchers("/api/audio").permitAll()
+                    .requestMatchers("/api/user/").permitAll()
                     .anyRequest().authenticated()
             )
             .userDetailsService(userDetailsService)
