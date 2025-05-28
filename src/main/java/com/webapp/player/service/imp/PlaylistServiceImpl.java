@@ -7,6 +7,7 @@ import com.webapp.player.persistence.entity.Playlist;
 import com.webapp.player.persistence.entity.Song;
 import com.webapp.player.persistence.entity.User;
 import com.webapp.player.persistence.repository.PlaylistRepository;
+import com.webapp.player.persistence.repository.SongRepository;
 import com.webapp.player.service.PlaylistService;
 import com.webapp.player.service.mapper.PlaylistMapper;
 import jakarta.annotation.Nonnull;
@@ -23,6 +24,7 @@ import java.util.List;
 @Slf4j
 public class PlaylistServiceImpl implements PlaylistService {
   private final PlaylistRepository playlistRepository;
+  private final SongRepository songRepository;
   private final PlaylistMapper playlistMapper;
 
   @Override
@@ -65,6 +67,27 @@ public class PlaylistServiceImpl implements PlaylistService {
   }
 
   @Override
+  @Transactional
+  public void addSongToPlaylist(Long playlistId, Long songId, String username) {
+    Playlist playlist = playlistRepository.findWithUsersAndSongsById(playlistId)
+            .orElseThrow(() -> new PlaylistNotFoundException("Playlist not found"));
+
+    boolean isUserAssociated = playlist.getUsers().stream()
+            .anyMatch(user -> user.getUsername().equals(username));
+
+    if (!isUserAssociated) {
+      log.error("User: {} don't have permission to modify this playlist", username);
+    }
+
+    Song song = songRepository.findById(songId)
+            .orElseThrow(() -> new SongNotFoundException("Song not found"));
+
+    playlist.addSong(song);
+
+    playlistRepository.save(playlist);
+  }
+
+  @Override
   @Transactional(readOnly = true)
   public List<Playlist> getPlaylistsByUsername(String username) {
     return playlistRepository.findByUsersUsername(username);
@@ -89,7 +112,7 @@ public class PlaylistServiceImpl implements PlaylistService {
   @Override
   @Transactional
   public void deletePlaylist(@Nonnull final Long playlistId, final String username) {
-    Playlist playlist = playlistRepository.findByIdWithUsers(playlistId)
+    Playlist playlist = playlistRepository.findWithUsersAndSongsById(playlistId)
             .orElseThrow(() -> new PlaylistNotFoundException("Playlist not found"));
 
     boolean isUserAssociated = playlist.getUsers().stream()

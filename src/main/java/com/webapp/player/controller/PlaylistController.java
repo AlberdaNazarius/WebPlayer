@@ -63,6 +63,18 @@ public class PlaylistController {
     return playlistMapper.toPlaylistDto(playlist);
   }
 
+  @PostMapping("/{playlistId}/add-song")
+  public ResponseEntity<?> addSongToPlaylist(
+          @PathVariable Long playlistId,
+          @RequestParam Long songId) {
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String username = authentication.getName();
+
+    playlistService.addSongToPlaylist(playlistId, songId, username);
+    return ResponseEntity.ok().build();
+  }
+
   @PutMapping("/{playlistId}")
   public PlaylistDto modifyPlaylist(@RequestBody @Nonnull final PlaylistDto dto,
                                     @PathVariable("playlistId") final Long playlistId) {

@@ -68,4 +68,16 @@ public class Playlist {
       song.getPlaylists().remove(this);
     }
   }
+
+  public void addSong(Song song) {
+    if (this.songs == null) {
+      this.songs = new HashSet<>();
+    }
+    this.songs.add(song);
+
+    if (song.getPlaylists() == null) {
+      song.setPlaylists(new HashSet<>());
+    }
+    song.getPlaylists().add(this);
+  }
 }

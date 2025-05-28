@@ -15,5 +15,5 @@ public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
   List<Playlist> findByUsersUsername(String username);
   @EntityGraph(attributePaths = {"users", "songs"})
   @Query("SELECT p FROM Playlist p WHERE p.id = :id")
-  Optional<Playlist> findByIdWithUsers(@Param("id") Long id);
+  Optional<Playlist> findWithUsersAndSongsById(@Param("id") Long id);
 }

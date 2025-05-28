@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -50,5 +51,17 @@ public class Song {
   public void removeFromPlaylist(Playlist playlist) {
     this.playlists.remove(playlist);
     playlist.getSongs().remove(this);
+  }
+
+  public void addToPlaylist(Playlist playlist) {
+    if (this.playlists == null) {
+      this.playlists = new HashSet<>();
+    }
+    this.playlists.add(playlist);
+
+    if (playlist.getSongs() == null) {
+      playlist.setSongs(new HashSet<>());
+    }
+    playlist.getSongs().add(this);
   }
 }
