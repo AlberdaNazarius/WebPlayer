@@ -29,14 +29,16 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
+            .cors(AbstractHttpConfigurer::disable)
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/api/auth/signup").permitAll()
                     .requestMatchers("/api/auth/login").permitAll()
                     .requestMatchers("/api/playlist/playlists").permitAll()
+                    .requestMatchers("/api/playlist/*").permitAll()
                     .requestMatchers("/api/song/songs").permitAll()
-                    .requestMatchers("/api/audio").permitAll()
-                    .requestMatchers("/api/user/").permitAll()
+                    .requestMatchers("/api/audio/**").permitAll()
+                    .requestMatchers("/api/user/*").permitAll()
                     .anyRequest().authenticated()
             )
             .userDetailsService(userDetailsService)

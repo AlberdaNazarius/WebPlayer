@@ -13,7 +13,12 @@ public class WebConfig {
       @Override
       public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
+                .allowedOrigins("http://localhost:3000")
+                .allowedMethods("*")
+                .exposedHeaders("Authorization")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(3600);
       }
     };
   }

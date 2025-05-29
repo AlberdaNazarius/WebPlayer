@@ -68,7 +68,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
   @Override
   @Transactional
-  public void addSongToPlaylist(Long playlistId, Long songId, String username) {
+  public Playlist addSongToPlaylist(Long playlistId, Long songId, String username) {
     Playlist playlist = playlistRepository.findWithUsersAndSongsById(playlistId)
             .orElseThrow(() -> new PlaylistNotFoundException("Playlist not found"));
 
@@ -85,6 +85,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     playlist.addSong(song);
 
     playlistRepository.save(playlist);
+    return playlist;
   }
 
   @Override
@@ -111,7 +112,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
   @Override
   @Transactional
-  public void deletePlaylist(@Nonnull final Long playlistId, final String username) {
+  public Playlist deletePlaylist(@Nonnull final Long playlistId, final String username) {
     Playlist playlist = playlistRepository.findWithUsersAndSongsById(playlistId)
             .orElseThrow(() -> new PlaylistNotFoundException("Playlist not found"));
 
@@ -120,7 +121,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     if (!isUserAssociated) {
       log.info("Received error when deleting playlist");
-      return;
+      return null;
     }
 
     for (User user : new HashSet<>(playlist.getUsers())) {
@@ -134,5 +135,6 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     playlistRepository.delete(playlist);
+    return playlist;
   }
 }

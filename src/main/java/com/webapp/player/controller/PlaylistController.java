@@ -64,15 +64,16 @@ public class PlaylistController {
   }
 
   @PostMapping("/{playlistId}/add-song")
-  public ResponseEntity<?> addSongToPlaylist(
+  public PlaylistDto addSongToPlaylist(
           @PathVariable Long playlistId,
           @RequestParam Long songId) {
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String username = authentication.getName();
 
-    playlistService.addSongToPlaylist(playlistId, songId, username);
-    return ResponseEntity.ok().build();
+    final var playlist = playlistService.addSongToPlaylist(playlistId, songId, username);
+    log.info("Song {} was added to playlist {}", songId, playlistId);
+    return playlistMapper.toPlaylistDto(playlist);
   }
 
   @PutMapping("/{playlistId}")
@@ -91,12 +92,13 @@ public class PlaylistController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<?> deletePlaylist(@PathVariable("id") final Long playlistId) {
+  public PlaylistDto deletePlaylist(@PathVariable("id") final Long playlistId) {
+    log.info("Started removing: Playlist with id {}", playlistId);
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String username = authentication.getName();
 
-    playlistService.deletePlaylist(playlistId, username);
+    final var removedPlaylist = playlistService.deletePlaylist(playlistId, username);
     log.info("DELETE: Playlist with id {} was deleted", playlistId);
-    return ResponseEntity.ok().build();
+    return playlistMapper.toPlaylistDto(removedPlaylist);
   }
 }
