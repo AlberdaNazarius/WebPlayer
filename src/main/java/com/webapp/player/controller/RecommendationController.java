@@ -20,6 +20,7 @@ public class RecommendationController {
 
   @PostMapping
   public List<String> getRecommendations(@RequestBody OllamaPrompt preferences) {
+    log.info("Received get recommendations request");
     return ollamaService.getRecommendations(preferences);
   }
 }
